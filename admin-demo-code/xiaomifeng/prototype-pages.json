@@ -1,0 +1,60 @@
+{
+  "sourceId": "xiaomifeng",
+  "viewer": {
+    "projectPath": "../.."
+  },
+  "groups": [
+    {
+      "id": "general",
+      "title": "运维管理",
+      "order": 0
+    }
+  ],
+  "pages": [
+    {
+      "id": "ops-home",
+      "title": "运维工作台",
+      "doc": "运维管理MVPPRD-20261027.md",
+      "hash": "#/workbench",
+      "mode": "screen",
+      "parent": "general",
+      "order": 0
+    },
+    {
+      "id": "ops-alerts",
+      "title": "告警中心",
+      "doc": "运维管理MVPPRD-20261027.md",
+      "hash": "#/alerts",
+      "mode": "screen",
+      "parent": "general",
+      "order": 1
+    },
+    {
+      "id": "ops-tickets",
+      "title": "工单中心",
+      "doc": "运维管理MVPPRD-20261027.md",
+      "hash": "#/tickets",
+      "mode": "screen",
+      "parent": "general",
+      "order": 2
+    },
+    {
+      "id": "ops-settings",
+      "title": "运维配置",
+      "doc": "运维管理MVPPRD-20261027.md",
+      "hash": "#/settings",
+      "mode": "screen",
+      "parent": "general",
+      "order": 3
+    },
+    {
+      "id": "ops-solutions",
+      "title": "处置方案库",
+      "doc": "运维管理MVPPRD-20261027.md",
+      "hash": "#/solutions",
+      "mode": "screen",
+      "parent": "general",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "projectName": "viewer",
+  "tree": [
+    {
+      "id": "general",
+      "title": "项目入口",
+      "order": 999,
+      "children": [
+        {
+          "id": "getting-started",
+          "title": "项目说明",
+          "htmlPath": "pages/getting-started.html",
+          "mdPath": "desc/getting-started.md",
+          "order": 0,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

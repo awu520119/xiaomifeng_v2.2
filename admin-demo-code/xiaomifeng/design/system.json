@@ -1,0 +1,83 @@
+{
+  "version": 2,
+  "name": "形影随拍后台",
+  "colors": {
+    "primary": "#2776FF",
+    "success": "#52C41A",
+    "warning": "#FAAD14",
+    "error": "#FF4D4F",
+    "text": "#303338",
+    "muted": "#696C70",
+    "placeholder": "#B3B8BF",
+    "border": "#D7DAE0",
+    "divider": "#E9EBF0",
+    "page": "#F2F4F7",
+    "surface": "#FFFFFF"
+  },
+  "typography": {
+    "family": "'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif",
+    "size": 14,
+    "lineHeight": 22,
+    "titleSize": 18,
+    "titleWeight": 500,
+    "helperSize": 12,
+    "drawerTitleSize": 16
+  },
+  "layout": {
+    "pagePadding": 20,
+    "pageGap": 16,
+    "cardPadding": 20,
+    "scrollMode": "page"
+  },
+  "navigation": {
+    "mode": "dark",
+    "width": 220,
+    "collapsedWidth": 80,
+    "itemHeight": 42,
+    "showBrand": true,
+    "brand": "形影随拍",
+    "subtitle": "运维管理",
+    "darkBackground": "#000000",
+    "darkSubmenu": "#0C0D0D",
+    "darkItemText": "#CCCCCC",
+    "darkText": "#FFFFFF",
+    "darkMuted": "#8C8C8C",
+    "selectedBackground": "#3F86FF"
+  },
+  "header": {
+    "visible": true,
+    "height": 58,
+    "background": "#F2F4F7",
+    "showAccount": true,
+    "border": false
+  },
+  "controls": {
+    "height": 32,
+    "radius": 2,
+    "cardRadius": 4,
+    "cardShadow": false,
+    "queryWidth": 200,
+    "queryButtonWidth": 40
+  },
+  "table": {
+    "paddingBlock": 16,
+    "paddingInline": 12,
+    "headerBackground": "#FAFAFA",
+    "headerText": "#696C70",
+    "paginationGap": 16
+  },
+  "form": {
+    "itemGap": 20,
+    "columnGap": 16,
+    "columns": 2,
+    "labelPosition": "vertical"
+  },
+  "drawer": {
+    "formWidth": 720,
+    "detailWidth": 800,
+    "padding": 24,
+    "headerHeight": 56,
+    "headerTint": true,
+    "footerShadow": true
+  }
+}

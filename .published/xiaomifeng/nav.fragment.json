@@ -1,0 +1,22 @@
+{
+  "sourceId": "xiaomifeng",
+  "tree": [
+    {
+      "id": "xiaomifeng--general",
+      "title": "功能页面",
+      "order": 0,
+      "children": [
+        {
+          "id": "xiaomifeng--example-list",
+          "title": "示例列表",
+          "order": 0,
+          "templateType": "screen",
+          "routeHash": "#/examples",
+          "htmlPath": ".published/xiaomifeng/pages/example-list.html",
+          "mdPath": ".published/xiaomifeng/desc/示例列表.md",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

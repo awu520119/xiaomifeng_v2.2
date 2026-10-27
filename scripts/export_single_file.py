@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""导出可双击打开的单文件原型查看器。
+
+用法：python3 scripts/export_single_file.py . [--output share/prototype-viewer.html] [--force]
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+import os
+import tempfile
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+from offline_html import inline_page_assets
+from page_ops import iter_leaf_nodes, load_nav  # type: ignore
+from sync_project import sync
+
+
+def read(path: Path) -> str:
+    if not path.is_file():
+        raise FileNotFoundError(f"缺少必需文件：{path}")
+    return path.read_text(encoding="utf-8")
+
+
+def inline_tag(html: str, tag: str, source: str, content: str) -> str:
+    if tag == "style":
+        pattern = rf'<link rel="stylesheet" href="{re.escape(source)}"\s*/?>'
+        replacement = f"<style>\n{content}\n</style>"
+    else:
+        pattern = rf'<script src="{re.escape(source)}"></script>'
+        replacement = f"<script>\n{content}\n</script>"
+    html, count = re.subn(pattern, lambda _: replacement, html, count=1)
+    if count != 1:
+        raise ValueError(f"入口页未找到资源引用：{source}")
+    return html
+
+
+def safe_json(value: object) -> str:
+    # 防止内嵌 HTML 中的 </script> 提前结束承载数据的 script 标签。
+    return json.dumps(value, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+
+
+from project_lock import locked_cli
+
+
+@locked_cli
+def main() -> int:
+    parser = argparse.ArgumentParser(description="导出单个、可 file:// 离线打开的原型查看器 HTML")
+    parser.add_argument("project_dir")
+    parser.add_argument("--output", default="share/prototype-viewer.html")
+    parser.add_argument("--force", action="store_true", help="允许覆盖已有输出文件")
+    args = parser.parse_args()
+
+    project = Path(args.project_dir).resolve()
+    output = (project / args.output).resolve()
+    if project not in output.parents:
+        parser.error("--output 必须位于项目目录内")
+    if output.exists() and not args.force:
+        parser.error(f"输出已存在：{output}；确认覆盖请加 --force")
+
+    sync(project)
+    data = load_nav(project)
+    pages: dict[str, dict[str, str]] = {}
+    descs: dict[str, str] = {}
+
+    for node in iter_leaf_nodes(data["tree"]):
+        html_path = node.get("htmlPath")
+        if html_path:
+            page_html = read(project / html_path)
+            pages[html_path] = {"srcdoc": inline_page_assets(page_html, project / html_path, project)}
+        if node.get("mdPath"):
+            descs[node["id"]] = read(project / "desc" / f"{node['id']}.html")
+
+    html = read(project / "index.html")
+    html = inline_tag(html, "style", "assets/viewer.css", read(project / "assets/viewer.css"))
+    html = inline_tag(html, "script", "nav.js", f"window.NAV_DATA = {safe_json(data)};")
+    embedded = (
+        "window.PROTOTYPE_EMBEDDED_PAGES = " + safe_json(pages) + ";\n"
+        "window.PROTOTYPE_EMBEDDED_DESCS = " + safe_json(descs) + ";"
+    )
+    html = inline_tag(html, "script", "assets/viewer.js", f"{embedded}\n{read(project / 'assets/viewer.js')}")
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=output.parent, delete=False) as handle:
+            temporary = Path(handle.name)
+            handle.write(html)
+        os.replace(temporary, output)
+    finally:
+        if temporary and temporary.exists():
+            temporary.unlink()
+    print(f"✅ 已导出 {output.relative_to(project)}（{output.stat().st_size / 1024 / 1024:.2f} MB）")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except (OSError, ValueError) as error:
+        print(f"❌ 导出失败：{error}", file=sys.stderr)
+        raise SystemExit(1)
